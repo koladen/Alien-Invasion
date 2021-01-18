@@ -16,37 +16,46 @@ class Ship(Sprite):
         self.rect.bottom = self.screen_rect.bottom
 
         self.center = float(self.rect.centerx)
-# мое
+
         self.center_y = float(self.rect.centery)
-# мое
 
         self.moving_right = False
         self.moving_left = False
-        # мое
+
         self.moving_up = False
         self.moving_down = False
-        # мое_
 
     def update(self):
         if self.moving_right:
-            if self.moving_right and self.rect.right < self.screen_rect.right:
-                self.center += self.ai_settings.ship_speed_factor
+            self.move_right()
 
         if self.moving_left:
-            if self.moving_left and self.rect.left > 0:
-                self.center -= self.ai_settings.ship_speed_factor
-        self.rect.centerx = self.center
-# мое
+            self.move_left()
+
         if self.moving_up:
-            if self.moving_up and self.rect.top > self.screen_rect.top:
-                self.center_y -= self.ai_settings.ship_speed_factor
+            self.move_up()
 
         if self.moving_down:
-            if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
-                self.center_y += self.ai_settings.ship_speed_factor
+            self.move_down()
 
+        self.rect.centerx = self.center
         self.rect.centery = self.center_y
-# мое_
+
+    def move_right(self):
+        if self.rect.right < self.screen_rect.right:
+            self.center += self.ai_settings.ship_speed_factor
+
+    def move_left(self):
+        if self.rect.left > 0:
+            self.center -= self.ai_settings.ship_speed_factor
+
+    def move_up(self):
+        if self.rect.top > self.screen_rect.top:
+            self.center_y -= self.ai_settings.ship_speed_factor
+
+    def move_down(self):
+        if self.rect.bottom < self.screen_rect.bottom:
+            self.center_y += self.ai_settings.ship_speed_factor
 
     def blitme(self):
         self.screen.blit(self.image, self.rect)
