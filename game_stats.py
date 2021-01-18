@@ -1,5 +1,6 @@
 class GameStats():
     PATH = r'max_score'
+
     def __init__(self, ai_settings):
         self.ai_settings = ai_settings
         self.game_active = False
@@ -11,7 +12,8 @@ class GameStats():
         self.score = 0
         self.level = 1
 
-    def prep_highscore(self):
+    @staticmethod
+    def prep_highscore():
         with open(GameStats.PATH, 'r') as f:
             return int(f.read())
 
