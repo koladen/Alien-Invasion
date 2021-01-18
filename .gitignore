@@ -1,5 +1,5 @@
 venv/
 __pycache__/
-max_score
+max_score.*
 *.pyc
 *.pyc
