@@ -9,12 +9,13 @@ from explode import Explode
 explode = None
 
 
-def check_high_score(stats, sb):
+def check_high_score(PARAM):
     """Проверяет, появился ли новый рекорд."""
-    if stats.score > stats.high_score:
-        sb.text_color = (255, 30, 30)
-        stats.high_score = stats.score
-        sb.prep_high_score()
+    if PARAM.stats.score > PARAM.stats.high_score:
+        PARAM.sb.text_color = (255, 30, 30)
+        PARAM.stats.high_score = PARAM.stats.score
+        PARAM.sb.prep_high_score()
+
 
 
 def ship_hit(PARAM):
@@ -90,7 +91,7 @@ def check_bullet_alien_collisions(PARAM):
         for aliens in collisions.values():
             PARAM.stats.score += PARAM.ai_settings.alien_points * len(aliens)
         PARAM.sb.prep_score()
-        check_high_score(PARAM.stats, PARAM.sb)
+        check_high_score(PARAM)
 
 
 def update_bullets(PARAM):
