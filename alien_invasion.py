@@ -10,36 +10,37 @@ import asyncio
 from scoreboard import Scoreboard
 
 
+class Parameters:
+    pass
+
+
 def create_stars(ai_settings, screen):
     return [Star(ai_settings, screen) for _ in range(ai_settings.star_count)]
 
 
 # мое
-async def caption_loop():
-    ai_settings = Settings()
+async def caption_loop(ai_settings):
+
     while True:
         for i in range(len(ai_settings.caption)):
             pygame.display.set_caption(ai_settings.caption[i + 1:] + ' ' + ai_settings.caption[0:i+1])
             await asyncio.sleep(0.02)
 
 
-async def main_loop(ai_settings, screen, stats, sb, play_button, ship, bullets, aliens, stars):
+async def main_loop(PARAM):
     while True:
-        gf.check_events(ai_settings, screen, stats, sb, play_button, ship,
-                        aliens, bullets)
-        if stats.game_active:
-            ship.update()
-            gf.update_bullets(ai_settings, screen, stats, sb, ship, aliens,
-                              bullets)
-            gf.update_aliens(ai_settings, screen, stats, sb, ship, aliens,
-                             bullets)
-        gf.update_screen(ai_settings, screen, stats, sb, ship, aliens,
-                         bullets, stars, play_button)
+        gf.check_events(PARAM)
+        if PARAM.stats.game_active:
+            PARAM.ship.update()
+            gf.update_bullets(PARAM)
+            gf.update_aliens(PARAM)
+        gf.update_screen(PARAM)
         await asyncio.sleep(0.00001)
 
 
 # мое_
 async def run_game():
+    PARAMETERS= Parameters()
     pygame.init()
     ai_settings = Settings()
     screen = pygame.display.set_mode((ai_settings.screen_width, ai_settings.screen_height))
@@ -51,15 +52,24 @@ async def run_game():
     ship = Ship(ai_settings, screen)
     bullets = Group()
     aliens = Group()
-    gf.create_fleet(ai_settings, screen, ship, aliens)
+    PARAMETERS.ai_settings = ai_settings
+    PARAMETERS.screen = screen
+    PARAMETERS.stars = stars
+    PARAMETERS.play_button = play_button
+    PARAMETERS.stats = stats
+    PARAMETERS.sb = sb
+    PARAMETERS.ship = ship
+    PARAMETERS.bullets = bullets
+    PARAMETERS.aliens = aliens
+    gf.create_fleet(PARAMETERS)
 
     # мое
     # TODO сделать бегущую строку асинхронно. DONE!!!
 
     task1 = asyncio.create_task(
-        main_loop(ai_settings, screen, stats, sb, play_button, ship, bullets, aliens, stars))
+        main_loop(PARAMETERS))
 
-    task2 = asyncio.create_task(caption_loop())
+    task2 = asyncio.create_task(caption_loop(ai_settings))
     await task1
     await task2
 
